@@ -81,24 +81,24 @@ if uploaded_file:
 
     # 1. Display the count of duplicates
     st.subheader(f'Total Count of Duplicates: {duplicate_count}')
-    # Display the duplicates: Bag ID, Lot ID, Warehouse, Duplicate Flag, and Duplicate Rows
+    # Display the duplicates: Bag ID, Lot ID, Added Time, Warehouse, Duplicate Flag, and Duplicate Rows
     st.subheader('Bag and Lot IDs with Duplicates Flagged and Duplicate Rows')
-    st.write(duplicate_df[['Lot ID', 'Bag ID', 'Warehouse', 'Duplicate Flag', 'Duplicate Rows']])
+    st.write(duplicate_df[['Lot ID', 'Bag ID', 'Added Time', 'Warehouse', 'Duplicate Flag', 'Duplicate Rows']])
 
     # 2. Display the count of flagged Bag IDs longer than 15 characters
     st.subheader(f'Total Count of Bag IDs Longer than 15 Characters: {flagged_count}')
     # Display the flagged Bag IDs
     st.subheader('Flagged Bag IDs (Longer than 15 Characters)')
-    st.write(flagged_df[['Lot ID', 'Bag ID', 'Warehouse', 'Bag ID Length Flag']])
+    st.write(flagged_df[['Lot ID', 'Bag ID', 'Added Time', 'Warehouse', 'Bag ID Length Flag']])
 
     ### Download Buttons ###
     # Download option for duplicates
     st.download_button("Download Duplicate Bag and Lot IDs with Rows",
-                       data=duplicate_df[['Lot ID', 'Bag ID', 'Warehouse', 'Duplicate Flag', 'Duplicate Rows']].to_csv(
+                       data=duplicate_df[['Lot ID', 'Bag ID', 'Added Time', 'Warehouse', 'Duplicate Flag', 'Duplicate Rows']].to_csv(
                            index=False),
                        file_name="duplicate_bag_lot_ids_with_rows.csv")
 
     # Download option for flagged Bag IDs (longer than 15 characters)
     st.download_button("Download Flagged Bag IDs",
-                       data=flagged_df[['Lot ID', 'Bag ID', 'Warehouse', 'Bag ID Length Flag']].to_csv(index=False),
+                       data=flagged_df[['Lot ID', 'Bag ID', 'Added Time', 'Warehouse', 'Bag ID Length Flag']].to_csv(index=False),
                        file_name="flagged_bag_ids.csv")
