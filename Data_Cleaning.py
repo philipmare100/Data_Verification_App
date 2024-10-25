@@ -34,13 +34,15 @@ if uploaded_file:
     st.subheader('Uploaded Data')
     st.write(df)
 
-    # Check for the column with Bag ID or Bag Information
+    # Check for the column with Bag ID, Bag Information, or Bag QR Code
     if 'BAG ID.' in df.columns:
         df['Lot ID'], df['Bag ID'] = zip(*df['BAG ID.'].apply(extract_bag_and_lot_id))
     elif 'Bag Information' in df.columns:
         df['Lot ID'], df['Bag ID'] = zip(*df['Bag Information'].apply(extract_bag_and_lot_id))
+    elif 'BAG QR CODE' in df.columns:  # Added support for 'BAG QR CODE' column
+        df['Lot ID'], df['Bag ID'] = zip(*df['BAG QR CODE'].apply(extract_bag_and_lot_id))
     else:
-        st.error("Neither 'BAG ID.' nor 'Bag Information' column found!")
+        st.error("Neither 'BAG ID.', 'Bag Information', nor 'BAG QR CODE' column found!")
 
     # Check for the column with Dispatch Warehouse or Receiving Warehouse
     if 'DISPATCH WAREHOUSE' in df.columns:
