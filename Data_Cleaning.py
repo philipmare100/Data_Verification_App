@@ -1,6 +1,8 @@
 import streamlit as st
 import pandas as pd
-
+import matplotlib.pyplot as plt
+from matplotlib.dates import DateFormatter
+import matplotlib.dates as mdates
 
 # Function to extract the Bag ID and Lot ID from the string
 def extract_bag_and_lot_id(bag_code):
@@ -18,7 +20,6 @@ def extract_bag_and_lot_id(bag_code):
             lot_id = bag_code.split('Lot=')[-1].split(',')[0]
 
     return lot_id, bag_id
-
 
 # Streamlit app
 st.title('Warehouse and Bag ID Flagging for Dispatch and Receiving')
@@ -104,3 +105,29 @@ if uploaded_file:
     st.download_button("Download Flagged Bag IDs",
                        data=flagged_df[['Lot ID', 'Bag ID', 'Added Time', 'Warehouse', 'Bag ID Length Flag']].to_csv(index=False),
                        file_name="flagged_bag_ids.csv")
+
+    ### Stacked Bar Chart: Duplicates per Week Grouped by Warehouse with Date Ranges ###
+    # Convert "Added Time" to datetime if it's not already
+    if 'Added Time' in duplicate_df.columns:
+        duplicate_df['Added Time'] = pd.to_datetime(duplicate_df['Added Time'], errors='coerce')
+
+        # Set start-of-week dates and end-of-week dates for better labeling
+        duplicate_df['Week Start'] = duplicate_df['Added Time'] - pd.to_timedelta(duplicate_df['Added Time'].dt.weekday, unit='D')
+        duplicate_df['Week End'] = duplicate_df['Week Start'] + pd.Timedelta(days=6)
+
+        # Create a formatted label for each week range
+        duplicate_df['Week Range'] = duplicate_df['Week Start'].dt.strftime('%Y-%m-%d') + ' - ' + duplicate_df['Week End'].dt.strftime('%Y-%m-%d')
+
+        # Count duplicates per week and warehouse, using Week Range for clarity
+        weekly_duplicates = duplicate_df.groupby(['Week Range', 'Warehouse']).size().unstack(fill_value=0)
+
+        # Plotting the stacked bar chart
+        st.subheader("Total Duplicates per Week Grouped by Warehouse (with Date Ranges)")
+        plt.figure(figsize=(12, 7))
+        weekly_duplicates.plot(kind='bar', stacked=True)
+        plt.xlabel("Week (Date Range)")
+        plt.ylabel("Total Duplicates")
+        plt.title("Total Duplicates per Week Grouped by Warehouse")
+        plt.legend(title="Warehouse")
+        plt.xticks(rotation=45, ha='right')  # Rotate x-axis labels for readability
+        st.pyplot(plt)
