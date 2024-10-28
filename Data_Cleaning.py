@@ -94,12 +94,17 @@ if uploaded_file:
     # Sort rows with missing Lot ID by the most recent Added Time
     missing_lot_id_df = missing_lot_id_df.sort_values(by='Added Time', ascending=False)
 
+    # Prepare columns for display based on file name
+    columns_to_display = ['Lot ID', 'Bag ID', 'Added Time', 'KICO SEAL NO.']
+    if "Dispatch" in uploaded_file.name:
+        columns_to_display.append('MMS ZAMBIA TRUCK ID')
+
     # Display the count of rows with missing Lot IDs
     st.subheader(f'Total Count of Bags with Missing Lot ID: {missing_lot_id_count}')
 
-    # Display the table for rows with missing Lot IDs
+    # Display the table for rows with missing Lot IDs, conditionally including "MMS ZAMBIA TRUCK ID"
     st.subheader('Bag and Lot IDs Flagged with Missing Lot ID')
-    st.write(missing_lot_id_df[['Lot ID', 'Bag ID', 'Added Time','KICO SEAL NO.']])
+    st.write(missing_lot_id_df[columns_to_display])
 
     ### Part 4: Flagging Bag IDs Longer Than 15 Characters ###
     # Filter for Bag IDs longer than 15 characters
