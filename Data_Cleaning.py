@@ -99,7 +99,7 @@ if uploaded_file:
 
     # Display the table for rows with missing Lot IDs
     st.subheader('Bag and Lot IDs Flagged with Missing Lot ID')
-    st.write(missing_lot_id_df[['Lot ID', 'Bag ID', 'Added Time', 'Warehouse','MMS ZAMBIA TRUCK ID','KICO SEAL NO.']])
+    st.write(missing_lot_id_df[['Lot ID', 'Bag ID', 'Added Time','KICO SEAL NO.']])
 
     ### Part 4: Flagging Bag IDs Longer Than 15 Characters ###
     # Filter for Bag IDs longer than 15 characters
